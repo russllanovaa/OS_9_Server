@@ -153,6 +153,7 @@ namespace Server {
 			this->label4->Size = System::Drawing::Size(35, 13);
 			this->label4->TabIndex = 7;
 			this->label4->Text = L"label4";
+      
 			// 
 			// label5
 			// 
