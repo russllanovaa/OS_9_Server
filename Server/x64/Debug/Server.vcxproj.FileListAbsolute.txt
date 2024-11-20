@@ -1,3 +1,4 @@
 D:\ОС\лаби\lab.9\Server\Server\x64\Debug\Server.vcxproj.AssemblyReference.cache
 D:\ОС\лаби\lab.9\Server\Server\x64\Debug\Server.ServerForm.resources
 D:\ОС\лаби\lab.9\Server\Server\x64\Debug\Server.vcxproj.GenerateResource.cache
+D:\ОС\лаби\lab.9\Server\Server\x64\Debug\Server.vcxproj.ResolveComReference.cache
