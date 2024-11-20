@@ -1,5 +1,26 @@
 #pragma once
+#include <string>
+#include <regex>
+#include <fstream>
+#include <msclr/marshal_cppstd.h>
+#include <thread>
+#include <list>
+#include <vector>
 
+#include <array>
+#using <System.Net.Sockets.dll>
+#using <System.Net.dll>
+#using <System.Text.RegularExpressions.dll>
+#using <System.IO.dll>
+using namespace System;
+using namespace System::Net;
+using namespace System::Net::Sockets;
+using namespace System::Text;
+using namespace System::Threading;
+using namespace System::Windows::Forms;
+using namespace System::Drawing;
+using namespace msclr::interop;
+using namespace System::Threading::Tasks;
 namespace Server {
 
 	using namespace System;
@@ -8,13 +29,30 @@ namespace Server {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Threading::Tasks;
+
 
 	/// <summary>
 	/// Summary for ServerForm
 	/// </summary>
 	public ref class ServerForm : public System::Windows::Forms::Form
 	{
+	private:
+		static System::Net::IPAddress^ ipAddress;
+		static int port = 12345;
+	public: static System::Collections::Generic::List<System::Net::Sockets::TcpClient^>^ clients = gcnew System::Collections::Generic::List<System::Net::Sockets::TcpClient^>();
+		  static System::Collections::Generic::List<System::String^>^ logined = gcnew System::Collections::Generic::List<System::String^>();
+		  static bool moderate = true;
+		  static int bdwordcount = 0;
+
 	public:
+		static property System::Net::IPAddress^ IPAddress {
+			System::Net::IPAddress^ get() { return ipAddress; }
+			void set(System::Net::IPAddress^ value) { ipAddress = value; }
+		}
+	public:
+		static ServerForm^ instance;
+
 		ServerForm(void)
 		{
 			InitializeComponent();
@@ -190,7 +228,7 @@ namespace Server {
 			this->label4->AutoSize = true;
 			this->label4->Font = (gcnew System::Drawing::Font(L"Mongolian Baiti", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label4->Location = System::Drawing::Point(768, 28);
+			this->label4->Location = System::Drawing::Point(675, 26);
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(66, 21);
 			this->label4->TabIndex = 7;
@@ -237,6 +275,7 @@ namespace Server {
 			this->Margin = System::Windows::Forms::Padding(3, 2, 3, 2);
 			this->Name = L"ServerForm";
 			this->Text = L"Server";
+			this->Load += gcnew System::EventHandler(this, &ServerForm::ServerForm_Load);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
@@ -248,5 +287,19 @@ namespace Server {
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e);
 private: System::Void button3_Click(System::Object^ sender, System::EventArgs^ e);
+	 // private: System::Void ServerForm_Load(System::Object^ sender, System::EventArgs^ e);
+	 public: void FindIP();
+		   Task^ Main();
+		   Task^ HandleClientAsync(TcpClient^ client);
+		 
+		   void  UpdateLabel(String^ ip);
+		   void ProcessClient(Object^ clientObj);
+		   String^ CensorBadWords(String^ input, System::Collections::Generic::List<String^>^ badWords);
+		   void UpdateDataGridView();
+		   bool PromptUserForSignupConfirmation(String^ username);
+
+		   private: delegate bool PromptUserDelegate(String^ username);
+
+private: System::Void ServerForm_Load(System::Object^ sender, System::EventArgs^ e);
 };
 }
